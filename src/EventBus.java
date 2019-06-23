@@ -17,8 +17,28 @@
 import org.bouncycastle.core.main.j2me.java.util.*;
 
 /**
- * <p> Usage for posting of events:
+ * <p> Usage for posting an event:
  * <pre>
+ *     public class TestEvent extends EventObject {
+ *         private String name;
+ *         private int age;
+ *
+ *         public TestEvent(String name, int age) {
+ *             this.name = name;
+ *             this.age = age;
+ *         }
+ *
+ *         public String getName() { return name; }
+ *
+ *         public int getAge() { return age; }
+ *     }
+ *
+ *     public class EventPoster {
+ *         public EventPoster() {
+ *             EventBus.getBus().post(new TestEvent("John", 34));
+ *         }
+ *     }
+ *
  *
  * </pre>
  * <p> Usage for subscriber of events:
