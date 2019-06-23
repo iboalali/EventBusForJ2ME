@@ -1,8 +1,4 @@
-package org.bouncycastle.core.main.j2me.java.util;
-
-import java.util.NoSuchElementException;
-
-/**
+/*
  * Copyright (c) 2000-2019 The Legion of the Bouncy Castle Inc. (http://www.bouncycastle.org)
  * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -21,6 +17,11 @@ import java.util.NoSuchElementException;
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
+package org.bouncycastle.core.main.j2me.java.util;
+
+import java.util.NoSuchElementException;
+
 public interface ListIterator
         extends Iterator {
     public boolean hasPrevious();

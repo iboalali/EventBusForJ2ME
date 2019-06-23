@@ -15,7 +15,7 @@
  */
 
 /**
- * An interface that a class should implement to receive event via the {@link EventBus}.
+ * An abstract class that should be implemented to receive event via the {@link EventBus}.
  * <p>
  * Usage:
  * <pre>
@@ -40,12 +40,22 @@
  *     }
  * </pre>
  */
-public interface EventReceivers {
+public abstract class EventReceivers {
+
+    private boolean mIsSticky = false;
 
     /**
      * The receiver method for all events coming to the implementing class.
      *
      * @param event The event who's target is this class.
      */
-    void eventReceiver(EventObject event);
+    abstract void eventReceiver(EventObject event);
+
+    public boolean isSticky() {
+        return mIsSticky;
+    }
+
+    void setSticky(boolean isSticky) {
+        mIsSticky = isSticky;
+    }
 }

@@ -67,7 +67,11 @@ import org.bouncycastle.core.main.j2me.java.util.*;
 public class EventBus {
 
     private static volatile EventBus sInstance;
+    private static final Object EVENT_LOCK = new Object();
+    private static final Object STICKY_EVENT_LOCK = new Object();
+
     private Map mEvents;
+    private Map mStickyEvents;
 
     public static EventBus getBus() {
         EventBus instance = sInstance;
@@ -88,6 +92,7 @@ public class EventBus {
 
     private EventBus() {
         mEvents = new HashMap();
+        mStickyEvents = new HashMap();
     }
 
     /**
@@ -96,7 +101,9 @@ public class EventBus {
      * @param klass The subscriber class.
      * @param event The class to subscribe to.
      */
-    public void subscribe(EventReceivers klass, Class event) {
+    public void subscribe(EventReceivers klass, Class event, boolean sticky) {
+        klass.setSticky(sticky);
+
         synchronized (EventBus.class) {
             if (mEvents.containsKey(klass)) {
                 HashSet events = (HashSet) mEvents.get(klass);
@@ -115,6 +122,10 @@ public class EventBus {
                 mEvents.put(klass, events);
             }
         }
+
+        if (sticky && mStickyEvents.containsKey(event.getName())) {
+            post((EventObject) mStickyEvents.get(event.getName()));
+        }
     }
 
 
@@ -126,7 +137,7 @@ public class EventBus {
      * @return {@code true} if the class is registered to the event.
      */
     public boolean isSubscribed(EventReceivers klass, Class event) {
-        synchronized (EventBus.class) {
+        synchronized (EVENT_LOCK) {
             if (!mEvents.containsKey(klass)) {
                 return false;
             }
@@ -143,7 +154,7 @@ public class EventBus {
      * @param event The event to unsubscribe form.
      */
     public void unsubscribe(EventReceivers klass, Class event) {
-        synchronized (EventBus.class) {
+        synchronized (EVENT_LOCK) {
             if (!mEvents.containsKey(klass)) {
                 try {
                     throw new NotRegisteredException(klass);
@@ -172,7 +183,7 @@ public class EventBus {
      * @param klass The class to unsubscribe from all events.
      */
     public void unsubscribeAll(EventReceivers klass) {
-        synchronized (EventBus.class) {
+        synchronized (EVENT_LOCK) {
             if (!mEvents.containsKey(klass)) {
                 try {
                     throw new NotRegisteredException(klass);
@@ -210,5 +221,31 @@ public class EventBus {
                 }
             }
         }
+    }
+
+    public void postSticky(EventObject stickyEvent) {
+        stickyEvent.setSticky(true);
+
+        synchronized (STICKY_EVENT_LOCK) {
+            mStickyEvents.put(stickyEvent.getClass().getName(), stickyEvent);
+        }
+
+        post(stickyEvent);
+    }
+
+    public void removeStickyPost(Class eventType) {
+        synchronized (STICKY_EVENT_LOCK) {
+            mStickyEvents.remove(eventType.getName());
+        }
+    }
+
+    public EventObject getStickyEvent(Class eventType) {
+        synchronized (STICKY_EVENT_LOCK) {
+            if (mStickyEvents.containsKey(eventType.getName())) {
+                return (EventObject) mStickyEvents.get(eventType.getName());
+            }
+        }
+
+        return null;
     }
 }

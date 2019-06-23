@@ -21,7 +21,17 @@
  * This class has a final method for determining if the from this class extended event is of the intended type.
  */
 public abstract class EventObject {
+    private boolean mIsSticky = false;
+
     public final boolean isEventObjectAs(Class klass) {
         return this.getClass().getName().equals(klass.getName());
+    }
+
+    public boolean isSticky() {
+        return mIsSticky;
+    }
+
+    void setSticky(boolean isSticky) {
+        mIsSticky = isSticky;
     }
 }
