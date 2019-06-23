@@ -1,5 +1,3 @@
-import org.bouncycastle.core.main.j2me.java.util.*;
-
 /*
  * Copyright 2019 iboalali
  *
@@ -16,29 +14,34 @@ import org.bouncycastle.core.main.j2me.java.util.*;
  *    limitations under the License.
  */
 
+import org.bouncycastle.core.main.j2me.java.util.*;
+
 /**
  * <p> Usage for posting of events:
+ * <pre>
  *
+ * </pre>
  * <p> Usage for subscriber of events:
  * <pre>
- * class TestSubscriber implements EventReceivers {
- *     TestSubscriber() {
- *         if (!EventBus.getBus().isSubscribed(this, TestEvent1.class)) {
- *             EventBus.getBus().subscribe(this, TestEvent1.class);
+ *     class TestSubscriber implements EventReceivers {
+ *         TestSubscriber() {
+ *             if (!EventBus.getBus().isSubscribed(this, TestEvent1.class)) {
+ *                 EventBus.getBus().subscribe(this, TestEvent1.class);
+ *             }
+ *             if (!EventBus.getBus().isSubscribed(this, TestEvent2.class)) {
+ *                 EventBus.getBus().subscribe(this, TestEvent2.class);
+ *             }
  *         }
- *         if (!EventBus.getBus().isSubscribed(this, TestEvent2.class)) {
- *             EventBus.getBus().subscribe(this, TestEvent2.class);
- *         }
- *     }
  *
- *     public void eventReceiver(EventObject event) {
- *         if (event.isThisEventObject(TestEvent1.class)) {
- *             // handle event
- *         } else if (event.isThisEventObject(TestEvent2.class)) {
- *             // handle event
+ *         // Receiver method for all events coming to this class
+ *         public void eventReceiver(EventObject event) {
+ *             if (event.isEventObjectAs(TestEvent1.class)) {
+ *                 // handle event
+ *             } else if (event.isEventObjectAs(TestEvent2.class)) {
+ *                 // handle event
+ *             }
  *         }
  *     }
- * }
  * </pre>
  */
 public class EventBus {
@@ -68,9 +71,9 @@ public class EventBus {
     }
 
     /**
-     * Subscribe a class to an event.
+     * Subscribe a class to an event. If the class is already a subscriber an event, nothing happens.
      *
-     * @param klass The class to subscribe.
+     * @param klass The subscriber class.
      * @param event The class to subscribe to.
      */
     public void subscribe(EventReceivers klass, Class event) {
@@ -114,7 +117,7 @@ public class EventBus {
     }
 
     /**
-     * Unsubscribe a class from an event bus
+     * Unsubscribe a class from an event.
      *
      * @param klass The class to unsubscribe.
      * @param event The event to unsubscribe form.
