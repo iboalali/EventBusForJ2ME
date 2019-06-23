@@ -17,7 +17,29 @@ import org.bouncycastle.core.main.j2me.java.util.*;
  */
 
 /**
+ * <p> Usage for posting of events:
  *
+ * <p> Usage for subscriber of events:
+ * <pre>
+ * class TestSubscriber implements EventReceivers {
+ *     TestSubscriber() {
+ *         if (!EventBus.getBus().isSubscribed(this, TestEvent1.class)) {
+ *             EventBus.getBus().subscribe(this, TestEvent1.class);
+ *         }
+ *         if (!EventBus.getBus().isSubscribed(this, TestEvent2.class)) {
+ *             EventBus.getBus().subscribe(this, TestEvent2.class);
+ *         }
+ *     }
+ *
+ *     public void eventReceiver(EventObject event) {
+ *         if (event.isThisEventObject(TestEvent1.class)) {
+ *             // handle event
+ *         } else if (event.isThisEventObject(TestEvent2.class)) {
+ *             // handle event
+ *         }
+ *     }
+ * }
+ * </pre>
  */
 public class EventBus {
 
@@ -57,7 +79,7 @@ public class EventBus {
                 HashSet events = (HashSet) mEvents.get(klass);
 
                 if (events.contains(event.getName())) {
-                    throw new AlreadyRegisteredException(klass, event);
+                    throw new AlreadySubscribedException(klass, event);
                 } else {
                     events.add(event.getName());
 

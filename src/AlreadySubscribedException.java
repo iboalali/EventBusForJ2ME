@@ -15,10 +15,10 @@
  */
 
 /**
- *
+ * A {@link RuntimeException} thrown in cases where a class is already subscribed to a particular event.
  */
-class AlreadyRegisteredException extends RuntimeException {
-    AlreadyRegisteredException(EventReceivers klass, Object event) {
+class AlreadySubscribedException extends RuntimeException {
+    AlreadySubscribedException(EventReceivers klass, Object event) {
         super(klass.getClass().getName() + "has already registered the event " + event.getClass().getName());
     }
 }

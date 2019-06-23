@@ -15,9 +15,10 @@
  */
 
 /**
- *
+ * A {@link RuntimeException} thrown in cases where a class is not registered to a particular event, an event has no
+ * subscriber or a class did not subscribe to any event.
  */
-class NotRegisteredException extends Exception {
+class NotRegisteredException extends RuntimeException {
     NotRegisteredException(Class event) {
         super("No registered subscriber for the event " + event.getName());
     }

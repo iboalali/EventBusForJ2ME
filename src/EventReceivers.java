@@ -15,7 +15,29 @@
  */
 
 /**
+ * An interface that a class should implement to receive event via the {@link EventBus}.
+ * <p>
+ * Usage:
+ * <pre>
+ * class TestSubscriber implements EventReceivers {
+ *     TestSubscriber() {
+ *         if (!EventBus.getBus().isSubscribed(this, TestEvent1.class)) {
+ *             EventBus.getBus().subscribe(this, TestEvent1.class);
+ *         }
+ *         if (!EventBus.getBus().isSubscribed(this, TestEvent2.class)) {
+ *             EventBus.getBus().subscribe(this, TestEvent2.class);
+ *         }
+ *     }
  *
+ *     public void eventReceiver(EventObject event) {
+ *         if (event.isThisEventObject(TestEvent1.class)) {
+ *             // handle event
+ *         } else if (event.isThisEventObject(TestEvent2.class)) {
+ *             // handle event
+ *         }
+ *     }
+ * }
+ * </pre>
  */
 public interface EventReceivers {
     void eventReceiver(EventObject event);
